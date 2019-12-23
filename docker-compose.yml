@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+    php:
+        container_name: php
+        image: php:7.2-fpm
+        restart: always
+        volumes:
+            - ./app:/www:ro
+            - ./logs/php:/var/log/php:rw
+
+    nginx:
+        container_name: nginx-server
+        image: nginx:latest
+        restart: always
+        ports:
+            - "8888:80"
+        volumes:
+            - ./app:/usr/share/nginx/html:ro
+            - ./nginx/conf.d:/etc/nginx/conf.d:rw
+            - ./logs/nginx:/var/log/nginx:rw
+
+    mysql:
+        container_name: mysql
+        image: mysql:5.7
+        restart: always
+        ports:
+            - "8306:3306"
+        volumes:
+            - ./mysql/data:/var/lib/mysql:rw
+            - ./logs/mysql:/var/log/mysql:rw
+        environment:
+            MYSQL_ROOT_PASSWORD: 'password'
