@@ -6,7 +6,7 @@ services:
         image: php:7.2-fpm
         restart: always
         volumes:
-            - ./app:/www:ro
+            - ./app:/www:rw
             - ./logs/php:/var/log/php:rw
 
     nginx:
@@ -31,3 +31,13 @@ services:
             - ./logs/mysql:/var/log/mysql:rw
         environment:
             MYSQL_ROOT_PASSWORD: 'password'
+
+    mongo:
+        container_name: mongo
+        image: mongo:latest
+        restart: always
+        ports:
+            - "27017:27017"
+        volumes:
+            - ./mongodb/data:/data/db:rw
+            - ./mongodb/backup:/data/backup:rw
