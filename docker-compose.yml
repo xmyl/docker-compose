@@ -8,17 +8,21 @@ services:
         volumes:
             - ./app:/www:rw
             - ./logs/php:/var/log/php:rw
+        environment:
+            TZ: 'Asia/Shanghai'
 
     nginx:
-        container_name: nginx-server
+        container_name: nginx
         image: nginx:latest
         restart: always
         ports:
             - "8888:80"
         volumes:
-            - ./app:/usr/share/nginx/html:ro
+            - ./app:/usr/share/nginx/html:rw
             - ./nginx/conf.d:/etc/nginx/conf.d:rw
             - ./logs/nginx:/var/log/nginx:rw
+        environment:
+            TZ: 'Asia/Shanghai'
 
     mysql:
         container_name: mysql
@@ -31,6 +35,7 @@ services:
             - ./logs/mysql:/var/log/mysql:rw
         environment:
             MYSQL_ROOT_PASSWORD: 'password'
+            TZ: 'Asia/Shanghai'
 
     mongo:
         container_name: mongo
@@ -41,3 +46,5 @@ services:
         volumes:
             - ./mongodb/data:/data/db:rw
             - ./mongodb/backup:/data/backup:rw
+        environment:
+            TZ: 'Asia/Shanghai'
