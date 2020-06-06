@@ -48,3 +48,16 @@ services:
             - ./mongodb/backup:/data/backup:rw
         environment:
             TZ: 'Asia/Shanghai'
+      gogs:
+        container_name: gogs
+        image: gogs/gogs
+        volumes:
+            - ./gogs:/data
+        ports:
+            - "8888:3000"
+            - "8022:22"
+        links:
+            - mysql
+        environment:
+            TZ: "Asia/Shanghai"
+  
