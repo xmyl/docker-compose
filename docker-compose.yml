@@ -48,16 +48,31 @@ services:
             - ./mongodb/backup:/data/backup:rw
         environment:
             TZ: 'Asia/Shanghai'
-      gogs:
+
+    redis:
+        container_name: redis
+        image: redis:latest
+        restart: always
+        ports:
+            - "6379:6379"
+        volumes:
+            - ./redis/data:/data/:rw
+            - ./redis/conf:/etc/redis:rw
+            - ./logs/redis:/var/log/redis/:rw
+        entrypoint: ["redis-server", "/etc/redis/redis.conf"]
+        environment:
+            TZ: 'Asia/Shanghai'
+
+    gogs:
         container_name: gogs
         image: gogs/gogs
-        volumes:
-            - ./gogs:/data
+        restart: always
         ports:
-            - "8888:3000"
-            - "8022:22"
+            - "10022:22"
+            - "10080:3000"
+        volumes:
+            - /gogs:/data
         links:
             - mysql
         environment:
-            TZ: "Asia/Shanghai"
-  
+            TZ: 'Asia/Shanghai'
