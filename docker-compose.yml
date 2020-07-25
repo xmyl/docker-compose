@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
     php:
@@ -9,7 +9,7 @@ services:
             - ./app:/www:rw
             - ./logs/php:/var/log/php:rw
         environment:
-            TZ: 'Asia/Shanghai'
+            TZ: "Asia/Shanghai"
 
     nginx:
         container_name: nginx
@@ -22,7 +22,7 @@ services:
             - ./nginx/conf.d:/etc/nginx/conf.d:rw
             - ./logs/nginx:/var/log/nginx:rw
         environment:
-            TZ: 'Asia/Shanghai'
+            TZ: "Asia/Shanghai"
 
     mysql:
         container_name: mysql
@@ -34,8 +34,8 @@ services:
             - ./mysql/data:/var/lib/mysql:rw
             - ./logs/mysql:/var/log/mysql:rw
         environment:
-            MYSQL_ROOT_PASSWORD: 'password'
-            TZ: 'Asia/Shanghai'
+            MYSQL_ROOT_PASSWORD: "password"
+            TZ: "Asia/Shanghai"
 
     mongo:
         container_name: mongo
@@ -47,7 +47,7 @@ services:
             - ./mongodb/data:/data/db:rw
             - ./mongodb/backup:/data/backup:rw
         environment:
-            TZ: 'Asia/Shanghai'
+            TZ: "Asia/Shanghai"
 
     redis:
         container_name: redis
@@ -61,7 +61,7 @@ services:
             - ./logs/redis:/var/log/redis/:rw
         entrypoint: ["redis-server", "/etc/redis/redis.conf"]
         environment:
-            TZ: 'Asia/Shanghai'
+            TZ: "Asia/Shanghai"
 
     gogs:
         container_name: gogs
@@ -75,4 +75,34 @@ services:
         links:
             - mysql
         environment:
-            TZ: 'Asia/Shanghai'
+            TZ: "Asia/Shanghai"
+
+    elasticsearch:
+        container_name: elasticsearch
+        image: elasticsearch:7.8.0
+        restart: always
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        volumes:
+            # 授权data目录权限
+            - ./elasticsearch/data:/usr/share/elasticsearch/data:rw
+        environment:
+            TZ: "Asia/Shanghai"
+            discovery.type: "single-node"
+
+    kibana:
+        container_name: kibana
+        image: kibana:7.8.0
+        restart: always
+        ports:
+            - "5601:5601"
+        links:
+            - elasticsearch
+        volumes:
+            - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:rw
+        environment:
+            TZ: "Asia/Shanghai"
+            elasticsearch.hosts: "http://elasticsearch:9200"
+        depends_on:
+            - elasticsearch
