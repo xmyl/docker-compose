@@ -12,8 +12,8 @@ services:
             TZ: "$TZ"
 
     php:
+        build: ./services/php
         container_name: php
-        image: php:7.2-fpm
         restart: always
         volumes:
             - ./app:/www:rw
@@ -26,11 +26,15 @@ services:
         image: nginx:latest
         restart: always
         ports:
-            - "8888:80"
+            - "80:80"
+            - "12000-12010:12000-12010"
+            - "13000-13010:13000-13010"
         volumes:
             - ./app:/usr/share/nginx/html:rw
             - ./nginx/conf.d:/etc/nginx/conf.d:rw
             - ./logs/nginx:/var/log/nginx:rw
+        links:
+            - php
         environment:
             TZ: "$TZ"
 
