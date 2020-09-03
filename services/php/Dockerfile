@@ -5,7 +5,7 @@ RUN mkdir -p /usr/src/php/ext \
     && pecl install xhprof && docker-php-ext-enable xhprof \
     && pecl install protobuf && docker-php-ext-enable protobuf \
     && pecl install swoole && docker-php-ext-enable swoole \
-    && curl -L -o /tmp/syx.tar.gz https://github.com/syx-cloud/Syx/archive/v0.0.6.tar.gz
+    && curl -L -o /tmp/syx.tar.gz https://github.com/syx-cloud/Syx/archive/v0.0.6.tar.gz \
     && tar xfz /tmp/syx.tar.gz && mv Syx-0.0.6 /usr/src/php/ext/syx \
     && docker-php-ext-install syx && rm -rf /tmp/syx.tar.gz \
     && curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/5.3.1.tar.gz \
