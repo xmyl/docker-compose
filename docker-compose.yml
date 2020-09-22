@@ -72,7 +72,7 @@ services:
         volumes:
             - ./redis/data:/data/:rw
             - ./redis/conf:/etc/redis:rw
-            - ./logs/redis:/var/log/redis/:rw
+            - ./logs/redis:/var/log/redis:rw
         entrypoint: ["redis-server", "/etc/redis/redis.conf"]
         environment:
             TZ: "$TZ"
@@ -120,3 +120,24 @@ services:
             elasticsearch.hosts: "http://elasticsearch:9200"
         depends_on:
             - elasticsearch
+
+    grafana:
+        container_name: grafana
+        image: grafana/grafana
+        restart: always
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./grafana/storage:/var/lib/grafana:rw
+            - ./logs/grafana:/var/log/grafana:rw
+        environment:
+            TZ: "$TZ"
+
+    prometheus:
+        container_name: prometheus
+        image: prom/prometheus:latest
+        restart: always
+        ports:
+            - "9090:9090"
+        environment:
+            TZ: "$TZ"
