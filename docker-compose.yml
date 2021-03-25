@@ -5,6 +5,7 @@ services:
         container_name: music
         image: nondanee/unblockneteasemusic
         restart: always
+        command: -s -e https://music.163.com -o migu kuwo
         ports:
             - "8080:8080"
         environment:
