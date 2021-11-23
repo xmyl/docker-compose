@@ -142,3 +142,40 @@ services:
             - "9090:9090"
         environment:
             TZ: "$TZ"
+    
+    drone-server:
+        container_name: drone-server
+        image: drone/drone:latest
+        restart: always
+        ports:
+            - "8030:80"
+        volumes:
+            - ./drone:/var/lib/drone/
+            - /var/run/docker.sock:/var/run/docker.sock
+        environment:
+            - DRONE_OPEN=true
+            - DRONE_SERVER_HOST=drone-server
+            - DRONE_SERVER_PROTO=http
+            - DRONE_LOGS_TRACE=true
+            - DRONE_LOGS_DEBUG=true
+            - DRONE_GOGS=true
+            - DRONE_GOGS_SERVER=http://gogs:3000
+            - DRONE_PROVIDER=gogs
+            - DRONE_DATABASE_DATASOURCE=root:password@tcp(mysql:3306)/drone?parseTime=true
+            - DRONE_DATABASE_DRIVER=mysql
+            - DRONE_RPC_SECRET=MWckgvhjqg4E3eQ0psgZX4iNCxoQiyU4LLvO4eXFFuHtrTkIy8vwcAc3erB5f9reM
+            - DRONE_USER_CREATE=username:root,admin:true
+
+    drone-agent:
+        container_name: drone-agent
+        image: drone/agent:latest
+        restart: always
+        depends_on:
+            - drone-server
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        environment:
+            - DRONE_RPC_SERVER=http://drone-server
+            - DRONE_RPC_SECRET=MWckgvhjqg4E3eQ0psgZX4iNCxoQiyU4LLvO4eXFFuHtrTkIy8vwcAc3erB5f9reM
+            - DRONE_LOGS_TRACE=true
+            - DRONE_LOGS_DEBUG=true
